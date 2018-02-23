@@ -19,13 +19,13 @@
     <string name="btn_link_to_login">Already registered? Log in!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
-    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_reset_password">Enter</string>
     <string name="btn_back"><![CDATA[<< Back]]></string>
     <string name="hint_new_email">New Email</string>
     <string name="btn_change">Change</string>
     <string name="btn_send">Send</string>
     <string name="btn_remove">Remove</string>
     <string name="btn_sign_out">Sign Out</string>
-    <string name="lbl_forgot_password">Forgot password?</string>
-    <string name="forgot_password_msg">Please enter your registered Email ID so we can send you password reset instructions.</string>
+    <string name="lbl_forgot_password">Forgot your password?</string>
+    <string name="forgot_password_msg">Please enter your registered email so we can send you password reset instructions.</string>
 </resources>

@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.stephaniechan.friendzone.MainActivity">
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main Activity"
+        tools:layout_editor_absoluteX="149dp"
+        tools:layout_editor_absoluteY="202dp" />
 </android.support.constraint.ConstraintLayout>

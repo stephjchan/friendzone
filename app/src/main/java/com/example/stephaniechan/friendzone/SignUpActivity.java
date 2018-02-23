@@ -36,13 +36,25 @@ public class SignUpActivity extends AppCompatActivity {
     private SignInButton mGoogleButton;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 123;
-    //private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "LOGIN_ACTIVITIY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        // Get Firebase auth instance
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(SignUpActivity.this, LogoutActivity.class));
+                    finish();
+                }
+            }
+        };
 
         buttonLogin = (Button) findViewById(R.id.login_button);
         buttonSignUp = (Button) findViewById(R.id.sign_up_button);
@@ -127,12 +139,12 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
+    @Override
     public void onStart() {
         super.onStart();
 
         mAuth.addAuthStateListener(mAuthListener);
-    }*/
+    }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

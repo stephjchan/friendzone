@@ -90,7 +90,7 @@
             android:id="@+id/login_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
+            android:layout_marginTop="20dp"
             android:background="@null"
             android:text="@string/btn_link_to_login"
             android:textAllCaps="false"

@@ -15,7 +15,6 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-
         <ImageView
             android:layout_width="200sp"
             android:layout_height="200sp"
@@ -86,14 +85,12 @@
             android:textAllCaps="false"
             android:textColor="#737373" />
 
-
         <!-- Link to Sign Up Screen -->
-
         <Button
             android:id="@+id/register_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
+            android:layout_marginTop="20dp"
             android:background="@null"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
