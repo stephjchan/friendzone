@@ -61,12 +61,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        buttonRegister = (Button) findViewById(R.id.register_button);
-        buttonLogin = (Button) findViewById(R.id.button_login);
-        buttonReset = (Button) findViewById(R.id.button_reset_password);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBar);
+        buttonRegister = findViewById(R.id.register_button);
+        buttonLogin = findViewById(R.id.button_login);
+        buttonReset = findViewById(R.id.button_reset_password);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -128,16 +128,16 @@ public class LoginActivity extends AppCompatActivity {
                                            }
                                        });
 
-        mGoogleButton = (SignInButton) findViewById(R.id.googleButton);
-            // Configure Google Sign In
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
+        mGoogleButton = findViewById(R.id.googleButton);
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-            // Build a GoogleSignInClient with the options specified by gso.
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-            mGoogleButton.setOnClickListener(new View.OnClickListener() {
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     signIn();
@@ -208,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            //Snackbar.make(findViewById(R.id.googleButton), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Google Sign in Failed.", Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
                     }
