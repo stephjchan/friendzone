@@ -25,6 +25,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -37,7 +42,9 @@ public class SignUpActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 123;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private static final String TAG = "LOGIN_ACTIVITIY";
+    private static final String TAG = "SIGNUP_ACTIVITY";
+
+    private DatabaseReference mDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +63,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
         };
 
-        buttonLogin = (Button) findViewById(R.id.login_button);
-        buttonSignUp = (Button) findViewById(R.id.sign_up_button);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        buttonResetPassword = (Button) findViewById(R.id.button_reset_password);
+        buttonLogin = findViewById(R.id.login_button);
+        buttonSignUp = findViewById(R.id.sign_up_button);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBar);
+        buttonResetPassword = findViewById(R.id.button_reset_password);
 
         buttonResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -104,7 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignUpActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                Log.d("createUser_onComplete", "createUserWithEmail:onComplete:" + task.isSuccessful());
                                 progressBar.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
@@ -113,7 +121,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.makeText(SignUpActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    writeNewUser(user);
+                                    startActivity(new Intent(SignUpActivity.this, LogoutActivity.class));
                                     finish();
                                 }
                             }
@@ -121,7 +131,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        mGoogleButton = (SignInButton) findViewById(R.id.googleButton);
+        mGoogleButton = findViewById(R.id.googleButton);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -130,13 +140,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         mGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signIn();
             }
         });
+
+        mDataBase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -181,14 +192,24 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            writeNewUser(user);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            //Snackbar.make(findViewById(R.id.googleButton), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
                             //updateUI(null);
                         }
                     }
                 });
+    }
+
+    private void writeNewUser(FirebaseUser user) {
+        Map<String, String> userData = new HashMap<>();
+
+        userData.put("email", user.getEmail());
+        userData.put("username", user.getDisplayName());
+
+        mDataBase.child("users").child(user.getUid()).setValue(userData);
     }
 }

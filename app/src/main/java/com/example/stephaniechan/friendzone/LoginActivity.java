@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +29,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
-    private FirebaseAuth auth;
     private ProgressBar progressBar;
     private Button buttonRegister, buttonLogin, buttonReset;
 
@@ -39,15 +37,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private static final String TAG = "LOGIN_ACTIVITIY";
+    private static final String TAG = "LOGIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         // Get Firebase auth instance
         mAuth = FirebaseAuth.getInstance();
@@ -91,19 +86,19 @@ public class LoginActivity extends AppCompatActivity {
                                                final String password = inputPassword.getText().toString();
 
                                                if (TextUtils.isEmpty(email)) {
-                                                   Toast.makeText(getApplicationContext(), "Please enter email address.", Toast.LENGTH_SHORT).show();
+                                                   Toast.makeText(getApplicationContext(), "Please enter your email address.", Toast.LENGTH_SHORT).show();
                                                    return;
                                                }
 
                                                if (TextUtils.isEmpty(password)) {
-                                                   Toast.makeText(getApplicationContext(), "Please enter password.", Toast.LENGTH_SHORT).show();
+                                                   Toast.makeText(getApplicationContext(), "Please enter your password.", Toast.LENGTH_SHORT).show();
                                                    return;
                                                }
 
                                                progressBar.setVisibility(View.VISIBLE);
 
                                                //authenticate user
-                                               auth.signInWithEmailAndPassword(email, password)
+                                               mAuth.signInWithEmailAndPassword(email, password)
                                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                                            @Override
                                                            public void onComplete(@NonNull Task<AuthResult> task) {
@@ -119,8 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                        Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                                                    }
                                                                } else {
-                                                                   Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                                   startActivity(intent);
+                                                                   startActivity(new Intent(LoginActivity.this, LogoutActivity.class));
                                                                    finish();
                                                                }
                                                            }
@@ -143,6 +137,8 @@ public class LoginActivity extends AppCompatActivity {
                     signIn();
                 }
             });
+
+
     }
 
     @Override
@@ -185,6 +181,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
+                startActivity(new Intent(LoginActivity.this, LogoutActivity.class)); //
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -204,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
