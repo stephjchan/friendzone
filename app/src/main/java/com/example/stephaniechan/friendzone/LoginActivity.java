@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                        Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                                                    }
                                                                } else {
-                                                                   startActivity(new Intent(LoginActivity.this, LogoutActivity.class));
+                                                                   startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                                                    finish();
                                                                }
                                                            }
@@ -137,8 +137,6 @@ public class LoginActivity extends AppCompatActivity {
                     signIn();
                 }
             });
-
-
     }
 
     @Override
@@ -153,23 +151,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    /*private void updateUI(FirebaseUser user) {
-        hideProgressDialog();
-        if (user != null) {
-            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
-        }
-    }*/
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-                startActivity(new Intent(LoginActivity.this, LogoutActivity.class)); //
+                startActivity(new Intent(LoginActivity.this, MainActivity.class)); //
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);

@@ -57,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(SignUpActivity.this, LogoutActivity.class));
+                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     finish();
                 }
             }
@@ -123,7 +123,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 } else {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     writeNewUser(user);
-                                    startActivity(new Intent(SignUpActivity.this, LogoutActivity.class));
+                                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                     finish();
                                 }
                             }
