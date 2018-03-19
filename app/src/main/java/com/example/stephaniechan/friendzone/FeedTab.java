@@ -66,15 +66,16 @@ public class FeedTab extends Fragment {
                     for (DataSnapshot microReport : firebaseUser.getChildren()) {
                         MicroReportItem value = microReport.getValue(MicroReportItem.class);
 
-                        if (!value.getEventName().equals(" ")) {
+                        if (!value.getEventLocationAddress().equals(" ")) {
                             MicroReportItem mReport = new MicroReportItem();
 
                             //TODO: get location image/event image
                             mReport.setLocationPhoto(R.drawable.web_hi_res_512);
                             mReport.setEventName(value.getEventName());
-                            mReport.setEventUser(value.getEventUser());
-                            mReport.setPlace(value.getPlace());
-                            mReport.setEventTime(value.getEventTime());
+                            mReport.setEventLocationName(value.getEventLocationName());
+                            mReport.setEventLocationAddress(value.getEventLocationAddress());
+                            mReport.setEventUsername(value.getEventUsername());
+                            mReport.setEventStartTime(value.getEventStartTime());
 
                             listMReport.add(mReport);
                             //TODO: sort microreports by event time

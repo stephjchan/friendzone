@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:weightSum="10"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/item_image"
@@ -29,21 +31,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event Name"
+                android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/item_place_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Place_Name"
+                android:textColor="#424242"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/item_place_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Place_Addr"
+                android:textColor="#424242"
+                android:textStyle="italic"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/item_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/item_place"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Place"
+                android:textColor="#616161"
                 android:textSize="14sp" />
 
             <TextView

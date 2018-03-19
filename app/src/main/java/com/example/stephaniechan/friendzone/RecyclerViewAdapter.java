@@ -47,9 +47,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.itemImage.setImageResource(mData.get(position).getLocationPhoto());
 
         holder.itemEvent.setText(mData.get(position).getEventName());
-        holder.itemUser.setText(mData.get(position).getEventUser());
-        holder.itemPlace.setText(mData.get(position).getPlace());
-        holder.itemTime.setText(mData.get(position).getEventTime());
+        holder.itemUser.setText(mData.get(position).getEventUsername());
+        holder.itemPlaceName.setText(mData.get(position).getEventLocationName());
+        holder.itemPlaceAddr.setText(mData.get(position).getEventLocationAddress());
+        holder.itemTime.setText(mData.get(position).getEventStartTime());
 
     }
 
@@ -60,7 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView itemImage;
-        private TextView itemEvent, itemUser, itemPlace, itemTime;
+        private TextView itemEvent, itemUser, itemPlaceName, itemPlaceAddr, itemTime;
         private Button buttonJoin;
         private FirebaseAuth mAuth;
         private DatabaseReference mDataBase;
@@ -72,7 +73,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             itemEvent = itemView.findViewById(R.id.item_event);
             itemUser = itemView.findViewById(R.id.item_user);
-            itemPlace = itemView.findViewById(R.id.item_place);
+            itemPlaceName = itemView.findViewById(R.id.item_place_name);
+            itemPlaceAddr = itemView.findViewById(R.id.item_place_addr);
             itemTime = itemView.findViewById(R.id.item_time);
 
             mAuth = FirebaseAuth.getInstance();

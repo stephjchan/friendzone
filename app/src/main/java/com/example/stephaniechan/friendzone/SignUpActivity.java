@@ -212,11 +212,12 @@ public class SignUpActivity extends AppCompatActivity {
         userData.put("Username", user.getEmail().split("@")[0]);
         mDataBase.child("Users").child(user.getUid()).setValue(userData);
 
+        mReportData.put("EventLocationAddress", " ");
+        mReportData.put("EventLocationName", " ");
         mReportData.put("EventName", " ");
-        mReportData.put("EventUser", " ");
-        mReportData.put("Place", " ");
-        mReportData.put("StartTime", " ");
-        mReportData.put("EventTime", " ");
+        mReportData.put("EventStartTime", " ");
+        mReportData.put("EventUsername", " ");
+        mReportData.put("TimeStamp", " ");
         DatabaseReference savedData = mDataBase.child("Microreports").child(user.getUid()).push();
         savedData.setValue(mReportData);
 

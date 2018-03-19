@@ -7,20 +7,23 @@ package com.example.stephaniechan.friendzone;
 public class MicroReportItem {
 
     private int LocationPhoto;
+    private String EventLocationAddress;
+    private String EventLocationName;
     private String EventName;
-    private String EventUser;
-    private String Place;
-    private String EventTime;
+    private String EventStartTime;
+    private String EventUsername;
 
     public MicroReportItem() {
     }
 
-    public MicroReportItem(int locationPhoto, String eventName, String eventUser, String place, String eventTime) {
+    public MicroReportItem(int locationPhoto, String eventLocationAddress, String eventLocationName,
+                           String eventName, String eventUsername, String eventStartTime) {
         LocationPhoto = locationPhoto;
+        EventLocationAddress = eventLocationAddress;
+        EventLocationName = eventLocationName;
         EventName = eventName;
-        EventUser = eventUser;
-        Place = place;
-        EventTime = eventTime;
+        EventUsername = eventUsername;
+        EventStartTime = eventStartTime;
     }
 
     //Getter
@@ -28,20 +31,25 @@ public class MicroReportItem {
         return LocationPhoto;
     }
 
+    public String getEventLocationAddress() {
+        return EventLocationAddress;
+    }
+
+    public String getEventLocationName() {
+        return EventLocationName;
+    }
+
     public String getEventName() {
         return EventName;
     }
 
-    public String getEventUser() {
-        return EventUser;
+    public String getEventUsername() {
+        return EventUsername;
     }
 
-    public String getPlace() {
-        return Place;
-    }
 
-    public String getEventTime() {
-        return EventTime;
+    public String getEventStartTime() {
+        return EventStartTime;
     }
 
     //Setter
@@ -49,19 +57,23 @@ public class MicroReportItem {
         LocationPhoto = locationPhoto;
     }
 
+    public void setEventLocationAddress(String eventLocationAddress) {
+        EventLocationAddress = eventLocationAddress;
+    }
+
+    public void setEventLocationName(String eventLocationName) {
+        EventLocationName = eventLocationName;
+    }
+
     public void setEventName(String event_name) {
         EventName = event_name;
     }
 
-    public void setEventUser(String event_user) {
-        EventUser = event_user;
+    public void setEventUsername(String event_user) {
+        EventUsername = event_user;
     }
 
-    public void setPlace(String place) {
-        Place = place;
-    }
-
-    public void setEventTime(String eventTime) {
-        EventTime = eventTime;
+    public void setEventStartTime(String eventStartTime) {
+        EventStartTime = eventStartTime;
     }
 }
