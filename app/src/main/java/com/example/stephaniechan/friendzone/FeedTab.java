@@ -76,7 +76,7 @@ public class FeedTab extends Fragment {
         recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecyclerView.setAdapter(recyclerAdapter);
-        mDatabase = FirebaseDatabase.getInstance();
+
         return rootView;
     }
 
@@ -92,8 +92,9 @@ public class FeedTab extends Fragment {
         // hard code the search radius to be .5 km
         searchRadius = .5;
 
-
+        mDatabase = FirebaseDatabase.getInstance();
         myRef = mDatabase.getReference("/Microreports");
+
         DatabaseReference fireRef = mDatabase.getReference("user-location-geofire");
 
         mAuth = FirebaseAuth.getInstance();
