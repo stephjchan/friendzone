@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +38,10 @@ public class FriendsListTab extends Fragment {
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private String userEmail;
+
 
 
 
@@ -48,6 +54,10 @@ public class FriendsListTab extends Fragment {
         recyclerAdapter = new RecyclerViewAdapterUser(getContext(), listFriend);
         myRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecyclerview.setAdapter(recyclerAdapter);
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        userEmail = user.getEmail();
         return rootView;
     }
 
@@ -62,9 +72,13 @@ public class FriendsListTab extends Fragment {
                 listFriend = new ArrayList<>();
                 for (DataSnapshot firebaseUser: dataSnapshot.getChildren()){
                     FriendItem value = firebaseUser.getValue(FriendItem.class);
+                    if (userEmail.equals(value.getEmail())){
+                        continue;
+                    }
                     FriendItem mFriend = new FriendItem();
                     mFriend.setUsername(value.getUsername());
                     mFriend.setEmail(value.getEmail());
+                    mFriend.setID(firebaseUser.getKey());
                     listFriend.add(mFriend);
                     recyclerAdapter = new RecyclerViewAdapterUser(getContext(), listFriend);
                     myRecyclerview.setAdapter(recyclerAdapter);

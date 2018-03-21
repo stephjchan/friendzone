@@ -45,6 +45,7 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemUsername.setText(mData.get(position).getUsername());
         holder.itemEmail.setText(mData.get(position).getEmail());
+        holder.addFunc(mData.get(position).getID());
     }
 
 
@@ -57,6 +58,7 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
         private Button buttonAdd;
         private FirebaseAuth mAuth;
         private DatabaseReference mDataBase;
+        private DatabaseReference mRef;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -67,32 +69,42 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
             mAuth = FirebaseAuth.getInstance();
             mDataBase = FirebaseDatabase.getInstance().getReference();
 
-
             buttonAdd = itemView.findViewById(R.id.button_add);
             buttonAdd.setTag(0); // initialize button as "Add"
+        }
+
+        public void addFunc (final String uID){
             buttonAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final int status = (Integer) v.getTag();
                     final FirebaseUser user = mAuth.getCurrentUser();
-                    Map<String, Integer> account = new HashMap<>();
+                    Map<String, Integer> account1 = new HashMap<>();
+                    Map<String, Integer> account2 = new HashMap<>();
+
+
+                    //@ child of current userID in Friends branch
+//                    mRef = FirebaseDatabase.getInstance().getReference("/Friends/"+user.getUid());
 
                     //account.put(user.getEmail(), 1);
                     //CHANGE THIS!!!
                     switch (status) {
                         case 0:
-                            //change to JOINED if User clicks button
-                            //TODO: add user to Joined branch of database
-                            //mDataBase.child("Joined").child("Email").child("event_"+String.valueOf(1)).setValue(account);
+                            //change to REMOVE if User clicks button
+//                            mDataBase.child("Joined").child("Email").child("event_"+String.valueOf(1)).setValue(account);
+
+                            mDataBase.child("Friends").child(user.getUid()).child(uID).setValue(1);
+                            mDataBase.child("Friends").child(uID).child(user.getUid()).setValue(1);
                             buttonAdd.setText("REMOVE");
-                            buttonAdd.setBackgroundColor(Color.parseColor("#43a047"));
+                            //buttonAdd.setBackgroundColor(Color.parseColor("#43a047"));
                             v.setTag(1);
                             break;
                         case 1:
                             //change to JOIN? if User clicks button again
-                            //TODO: delete user from Joined branch of database
+                            mDataBase.child("Friends").child(user.getUid()).child(uID).setValue(null);
+                            mDataBase.child("Friends").child(uID).child(user.getUid()).setValue(null);
                             buttonAdd.setText("ADD");
-                            buttonAdd.setBackgroundColor(Color.parseColor("#4d2c91"));
+                            //buttonAdd.setBackgroundColor(Color.parseColor("#4d2c91"));
                             v.setTag(0);
                             break;
                     }

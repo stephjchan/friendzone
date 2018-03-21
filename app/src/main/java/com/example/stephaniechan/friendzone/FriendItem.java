@@ -8,12 +8,14 @@ public class FriendItem {
     // THESE NAMES NEED TO MATCH DB
     private String Email;
     private String Username;
+    private String ID;
 
     public FriendItem(){}
 
-    public FriendItem(String email, String username){
+    public FriendItem(String email, String username, String id){
         Email = email;
         Username = username;
+        ID = id;
     }
 
     public String getEmail() {
@@ -30,6 +32,14 @@ public class FriendItem {
 
     public void setUsername(String username){
         Username = username;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
 }
