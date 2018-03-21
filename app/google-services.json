@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "500092542956-q27nh86ccpu8cdftv2lalg3lpat83481.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stephaniechan.friendzone",
+            "certificate_hash": "de41e5533ad3fa2d9dbe1608c9121326b12c00cd"
+          }
+        },
+        {
+          "client_id": "500092542956-4rhd8f2faccukv0rtrmfnj0ah7qeuvoc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stephaniechan.friendzone",
+            "certificate_hash": "0a5dafb0065cb3f776e097ef5c53aec97fb90aa0"
+          }
+        },
+        {
           "client_id": "500092542956-7ijdvntts0bqigkjrsalfgqmb266bnu7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +45,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500092542956-7ijdvntts0bqigkjrsalfgqmb266bnu7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
