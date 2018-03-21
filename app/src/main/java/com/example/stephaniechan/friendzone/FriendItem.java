@@ -6,8 +6,8 @@ package com.example.stephaniechan.friendzone;
 
 public class FriendItem {
     // THESE NAMES NEED TO MATCH DB
-    public String Email;
-    public String Username;
+    private String Email;
+    private String Username;
 
     public FriendItem(){}
 

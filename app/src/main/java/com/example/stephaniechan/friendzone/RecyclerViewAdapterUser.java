@@ -77,7 +77,7 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
                     final FirebaseUser user = mAuth.getCurrentUser();
                     Map<String, Integer> account = new HashMap<>();
 
-                    account.put(user.getEmail(), 1);
+                    //account.put(user.getEmail(), 1);
                     //CHANGE THIS!!!
                     switch (status) {
                         case 0:
