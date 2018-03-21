@@ -118,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignUpActivity.this, "Authentication failed." + task.getException(),
+                                    Toast.makeText(SignUpActivity.this, "Email Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     FirebaseUser user = mAuth.getCurrentUser();
@@ -193,12 +193,10 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             writeNewUser(user);
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignUpActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
-                            //updateUI(null);
                         }
                     }
                 });
@@ -206,10 +204,28 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void writeNewUser(FirebaseUser user) {
         Map<String, String> userData = new HashMap<>();
+        Map<String, String> mReportData = new HashMap<>();
+        Map<String, Integer> accounts = new HashMap<>();
+        Map<String, Integer> friends = new HashMap<>();
 
-        userData.put("email", user.getEmail());
-        userData.put("username", user.getDisplayName());
+        userData.put("Email", user.getEmail());
+        userData.put("Username", user.getEmail().split("@")[0]);
+        mDataBase.child("Users").child(user.getUid()).setValue(userData);
 
-        mDataBase.child("users").child(user.getUid()).setValue(userData);
+
+        // to be done by Jansen/Moshe
+        /*mReportData.put("EventLocationAddress", " ");
+        mReportData.put("EventLocationName", " ");
+        mReportData.put("EventName", " ");
+        mReportData.put("EventStartTime", " ");
+        mReportData.put("EventUsername", " ");
+        mReportData.put("TimeStamp", " ");
+        DatabaseReference savedData = mDataBase.child("Microreports").child(user.getUid()).push();
+        savedData.setValue(mReportData);
+        accounts.put(" ", 0);
+        mDataBase.child("Joined").child(savedData.getKey()).setValue(accounts);*/
+
+        friends.put(" ", 0);
+        mDataBase.child("Friends").child(user.getUid()).setValue(accounts);
     }
 }
