@@ -1,33 +1,37 @@
 package com.example.stephaniechan.friendzone;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Stephanie Chan on 3/14/2018.
  */
 
 public class MicroReportItem {
 
-    private int LocationPhoto;
+    private Bitmap LocationPhoto;
     private String EventLocationAddress;
     private String EventLocationName;
     private String EventName;
     private String EventStartTime;
     private String EventUsername;
+    private String ID;
 
     public MicroReportItem() {
     }
 
-    public MicroReportItem(int locationPhoto, String eventLocationAddress, String eventLocationName,
-                           String eventName, String eventUsername, String eventStartTime) {
+    public MicroReportItem(Bitmap locationPhoto, String eventLocationAddress, String eventLocationName,
+                           String eventName, String eventUsername, String eventStartTime, String id) {
         LocationPhoto = locationPhoto;
         EventLocationAddress = eventLocationAddress;
         EventLocationName = eventLocationName;
         EventName = eventName;
         EventUsername = eventUsername;
         EventStartTime = eventStartTime;
+        ID = id;
     }
 
     //Getter
-    public int getLocationPhoto() {
+    public Bitmap getLocationPhoto() {
         return LocationPhoto;
     }
 
@@ -47,13 +51,16 @@ public class MicroReportItem {
         return EventUsername;
     }
 
-
     public String getEventStartTime() {
         return EventStartTime;
     }
 
+    public String getID() {
+        return ID;
+    }
+
     //Setter
-    public void setLocationPhoto(int locationPhoto) {
+    public void setLocationPhoto(Bitmap locationPhoto) {
         LocationPhoto = locationPhoto;
     }
 
@@ -75,5 +82,9 @@ public class MicroReportItem {
 
     public void setEventStartTime(String eventStartTime) {
         EventStartTime = eventStartTime;
+    }
+
+    public void setID(String id) {
+        ID = id;
     }
 }

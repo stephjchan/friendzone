@@ -212,7 +212,9 @@ public class SignUpActivity extends AppCompatActivity {
         userData.put("Username", user.getEmail().split("@")[0]);
         mDataBase.child("Users").child(user.getUid()).setValue(userData);
 
-        mReportData.put("EventLocationAddress", " ");
+
+        // to be done by Jansen/Moshe
+        /*mReportData.put("EventLocationAddress", " ");
         mReportData.put("EventLocationName", " ");
         mReportData.put("EventName", " ");
         mReportData.put("EventStartTime", " ");
@@ -222,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity {
         savedData.setValue(mReportData);
 
         accounts.put(" ", 0);
-        mDataBase.child("Joined").child(user.getUid()).child(savedData.getKey()).setValue(accounts);
+        mDataBase.child("Joined").child(savedData.getKey()).setValue(accounts);*/
 
         friends.put(" ", 0);
         mDataBase.child("Friends").child(user.getUid()).setValue(accounts);
