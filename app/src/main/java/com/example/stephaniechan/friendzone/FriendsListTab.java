@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 //import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -53,9 +54,12 @@ public class FriendsListTab extends Fragment {
 //    FirebaseDatabase FDB;
 //    DatabaseReference DBR;
 
+    private Button addFriend;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
 
@@ -76,6 +80,7 @@ public class FriendsListTab extends Fragment {
 //
 //        FDB = FirebaseDatabase.getInstance();
 //        GetDataFirebase();
+        addFriend = (Button) rootView.findViewById(R.id.add_friend);
         return rootView;
     }
 

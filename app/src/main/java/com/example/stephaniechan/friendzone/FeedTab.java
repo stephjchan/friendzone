@@ -1,9 +1,12 @@
+
 package com.example.stephaniechan.friendzone;
 
 /**
  * Created by Stephanie Chan on 3/5/2018.
  */
 
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -14,6 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +42,11 @@ public class FeedTab extends Fragment {
 
     private List<MicroReportItem> listMReport = new ArrayList<>();
 
-    private FirebaseDatabase mDataBase;
     private DatabaseReference myRef;
+    private Bitmap placeImg;
+
+    protected GeoDataClient mGeoDataClient;
+    protected PlaceDetectionClient mPlaceDetectionClient;
 
     @Nullable
     @Override
@@ -51,8 +66,12 @@ public class FeedTab extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDataBase = FirebaseDatabase.getInstance();
-        myRef = mDataBase.getReference("/Microreports");
+        // Construct a GeoDataClient
+        mGeoDataClient = Places.getGeoDataClient(getContext(), null);
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(getContext(), null);
+
+        myRef = FirebaseDatabase.getInstance().getReference("/Microreports");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -66,22 +85,21 @@ public class FeedTab extends Fragment {
                     for (DataSnapshot microReport : firebaseUser.getChildren()) {
                         MicroReportItem value = microReport.getValue(MicroReportItem.class);
 
-                        if (!value.getEventLocationAddress().equals(" ")) {
-                            MicroReportItem mReport = new MicroReportItem();
+                        MicroReportItem mReport = new MicroReportItem();
 
-                            //TODO: get location image/event image
-                            mReport.setLocationPhoto(R.drawable.web_hi_res_512);
-                            mReport.setEventName(value.getEventName());
-                            mReport.setEventLocationName(value.getEventLocationName());
-                            mReport.setEventLocationAddress(value.getEventLocationAddress());
-                            mReport.setEventUsername(value.getEventUsername());
-                            mReport.setEventStartTime(value.getEventStartTime());
+                        getPhotos();
+                        mReport.setLocationPhoto(placeImg);
+                        mReport.setEventName(value.getEventName());
+                        mReport.setEventLocationName(value.getEventLocationName());
+                        mReport.setEventLocationAddress(value.getEventLocationAddress());
+                        mReport.setEventUsername(value.getEventUsername());
+                        mReport.setEventStartTime(value.getEventStartTime());
+                        mReport.setID(microReport.getKey());
 
-                            listMReport.add(mReport);
-                            //TODO: sort microreports by event time
-                            recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
-                            myRecyclerView.setAdapter(recyclerAdapter);
-                        }
+                        listMReport.add(mReport);
+                        //TODO: sort microreports by event time
+                        recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
+                        myRecyclerView.setAdapter(recyclerAdapter);
                     }
                 }
             }
@@ -90,6 +108,35 @@ public class FeedTab extends Fragment {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w("FEED_TAB", "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    // Request photos and metadata for the specified place.
+    private void getPhotos() {
+        //TODO: change placeID to actual place ID
+        final String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                // Get the list of photos.
+                PlacePhotoMetadataResponse photos = task.getResult();
+                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                // Get the first photo in the list.
+                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                // Get the attribution text.
+                CharSequence attribution = photoMetadata.getAttributions(); // may delete this
+                // Get a full-size bitmap for the photo.
+                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                        PlacePhotoResponse photo = task.getResult();
+                        placeImg = photo.getBitmap();
+                    }
+                });
             }
         });
     }
