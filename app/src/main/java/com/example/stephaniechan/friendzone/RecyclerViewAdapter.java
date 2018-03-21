@@ -48,7 +48,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.itemImage.setImageBitmap(mData.get(position).getLocationPhoto());
+        // Jansen Yan: commented out the photo stuff to avoid pinging the api repeatedly
+        //holder.itemImage.setImageBitmap(mData.get(position).getLocationPhoto());
 
         holder.itemEvent.setText(mData.get(position).getEventName());
         holder.itemUser.setText(mData.get(position).getEventUsername());

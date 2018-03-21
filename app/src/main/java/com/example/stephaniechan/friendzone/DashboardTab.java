@@ -85,6 +85,7 @@ import com.firebase.geofire.GeoQueryEventListener;
 // Jansen Yan: Causes conflict with google api listener
 //import com.firebase.geofire.LocationCallback;
 
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
@@ -111,6 +112,7 @@ public class DashboardTab extends Fragment {
 
     private Button mLogOutButton;
     private FirebaseAuth mAuth;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -167,16 +169,20 @@ public class DashboardTab extends Fragment {
 
 
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        //Jansen Yan: get the currently logged in firebase user
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                //Jansen Yan: get the currently logged in firebase user
-                user = firebaseAuth.getCurrentUser();
+
+
+                //System.out.println("Username up here: "  + user.getUid() + " " + user.getDisplayName() + " " + user.getEmail());
                 //Jansen Yan: changed to user instead of calling the function
 //                if (firebaseAuth.getCurrentUser() == null) {
 //                    startActivity(new Intent(getActivity(), LoginActivity.class));
 //                }
-                if (user == null){
+                if (firebaseAuth.getCurrentUser() == null){
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
             }
@@ -279,32 +285,36 @@ public class DashboardTab extends Fragment {
             // Jansen Yan: Submit the microreport here
 
             //get the user-id of the user who is logged in
+
             String uid = user.getUid();
             String username = user.getDisplayName();
 
             // get the location and event name
             TextView textview = rootView.findViewById(R.id.place_details);
             String eventLocationAndName[] = textview.getText().toString().split("\n");
-//            for (int i = 0; i < eventLocationAndName.length; i++){
-//                System.out.println(eventLocationAndName[i]);
-//            }
+            for (int i = 0; i < eventLocationAndName.length; i++){
+                System.out.println(eventLocationAndName[i]);
+            }
 
             String eventName = "";
             String locationName = "";
             String locationAddress = "";
+            String eventPhotoRetriever="";
             //parse the info
             // if the textview comes from a recommendation, it should be 3 lines long
-            if (eventLocationAndName.length == 3){
+            if (eventLocationAndName.length == 4){
                 eventName = eventLocationAndName[0];
                 locationName = eventLocationAndName[1];
                 locationAddress = eventLocationAndName[2];
+                eventPhotoRetriever = eventLocationAndName[3];
             }
             // searches return 5 lines of text
             else if (eventLocationAndName.length == 5){
                 eventName = eventLocationAndName[0];
                 locationName = eventLocationAndName[0];
+                eventPhotoRetriever = eventLocationAndName[1].split(":")[1].trim();
                 // first split by :, so the Address: 3123 bla.dr becomes [Address, 3123 bla.dr]
-                locationAddress = eventLocationAndName[2].split(":")[1];
+                locationAddress = eventLocationAndName[2].split(":")[1].trim();
             }
             System.out.println("eventName: " + eventName + " " + "locationName: " + locationName + " " + "locatinAddress: " + locationAddress);
 
@@ -329,8 +339,8 @@ public class DashboardTab extends Fragment {
                 jodaTime = jodaTime.plusHours(minHourAmount);
             }
             endtime = formatter.print(jodaTime);
-
-            MicroReport report = new MicroReport(eventName, endtime, locationName, locationAddress, username,  jodaTime.toString() );
+            System.out.println("Username down here: "  + uid);
+            MicroReport report = new MicroReport(eventName, endtime, locationName, locationAddress, username,  jodaTime.toString(), eventPhotoRetriever );
             final String microReportKey;
             DatabaseReference microReportRef = mDatabase.child("Microreports").child(uid).push();
             String microReportID = microReportRef.getKey();
@@ -359,7 +369,7 @@ public class DashboardTab extends Fragment {
                 }
             });
             // set lobby for other users to join
-            DatabaseReference joinLobby = mDatabase.child("Joined").child(uid).child(microReportID);
+            DatabaseReference joinLobby = mDatabase.child("Joined").child(microReportID);
             joinLobby.setValue("0", new DatabaseReference.CompletionListener() {
                 // test to see if value is set
                 @Override
