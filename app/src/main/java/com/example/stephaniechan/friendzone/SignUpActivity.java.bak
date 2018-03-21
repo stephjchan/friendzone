@@ -222,7 +222,10 @@ public class SignUpActivity extends AppCompatActivity {
         mReportData.put("TimeStamp", " ");
         DatabaseReference savedData = mDataBase.child("Microreports").child(user.getUid()).push();
         savedData.setValue(mReportData);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7ca97fd2331c949a9e508b7e430d1e7eb5a431ac
         accounts.put(" ", 0);
         mDataBase.child("Joined").child(savedData.getKey()).setValue(accounts);*/
 

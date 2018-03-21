@@ -102,9 +102,9 @@ public class LoginActivity extends AppCompatActivity {
                                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                                            @Override
                                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                               // If sign in fails, display a message to the user. If sign in succeeds
-                                                               // the auth state listener will be notified and logic to handle the
-                                                               // signed in user can be handled in the listener.
+                                                               /* If sign in fails, display a message to the user. If sign in succeeds
+                                                                the auth state listener will be notified and logic to handle the
+                                                                signed in user can be handled in the listener. */
                                                                progressBar.setVisibility(View.GONE);
                                                                if (!task.isSuccessful()) {
                                                                    // there was an error
@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class)); //
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -182,13 +182,10 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Google Sign in Failed.", Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
                     }
                 });

@@ -25,10 +25,16 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme"></activity>
+<<<<<<< HEAD
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBMBjqGglKjnz_EtTC2JGFmZwhj2CcZBfI"/>
+=======
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBMBjqGglKjnz_EtTC2JGFmZwhj2CcZBfI"></meta-data>
+>>>>>>> 7ca97fd2331c949a9e508b7e430d1e7eb5a431ac
     </application>
     <uses-permission android:name="android.permisssion.ACCESS_COARSE_LOCATION"></uses-permission>
 
