@@ -15,6 +15,7 @@ public class MicroReportItem {
     private String EventStartTime;
     private String EventUsername;
     private String ID;
+    private String EventPhotoRetriever;
 
     public MicroReportItem() {
     }
@@ -59,6 +60,9 @@ public class MicroReportItem {
         return ID;
     }
 
+    // Added by Jansen Yan to get photo url/id
+    public String getEventPhotoRetriever() { return EventPhotoRetriever;}
+
     //Setter
     public void setLocationPhoto(Bitmap locationPhoto) {
         LocationPhoto = locationPhoto;
@@ -86,5 +90,8 @@ public class MicroReportItem {
 
     public void setID(String id) {
         ID = id;
+    }
+    public void setEventPhotoRetriever(String photo_retriever){
+        EventPhotoRetriever = photo_retriever;
     }
 }
