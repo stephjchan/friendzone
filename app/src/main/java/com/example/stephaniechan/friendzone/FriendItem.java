@@ -9,13 +9,15 @@ public class FriendItem {
     private String Email;
     private String Username;
     private String ID;
+    private Boolean IsFriend;
 
     public FriendItem(){}
 
-    public FriendItem(String email, String username, String id){
+    public FriendItem(String email, String username, String id, boolean isFriend){
         Email = email;
         Username = username;
         ID = id;
+        IsFriend = isFriend;
     }
 
     public String getEmail() {
@@ -40,6 +42,14 @@ public class FriendItem {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public Boolean getIsFriend() {
+        return IsFriend;
+    }
+
+    public void setIsFriend(Boolean isFriend) {
+        IsFriend = isFriend;
     }
 
 }

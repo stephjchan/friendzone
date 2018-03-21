@@ -35,15 +35,14 @@ public class FriendsListTab extends Fragment {
     private RecyclerView myRecyclerview;
     private RecyclerViewAdapterUser recyclerAdapter;
     private List<FriendItem> listFriend = new ArrayList<>();
+    private List<String> curFriends = new ArrayList<>();
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
+    private DatabaseReference mFriendRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userEmail;
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +55,6 @@ public class FriendsListTab extends Fragment {
         myRecyclerview.setAdapter(recyclerAdapter);
 
         mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
         userEmail = user.getEmail();
         return rootView;
     }
@@ -65,11 +63,30 @@ public class FriendsListTab extends Fragment {
     public void onCreate(@Nullable Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        String x = user.getUid();
+        mFriendRef = mDatabase.getReference("/Friends/"+user.getUid()); //get curUser friendsList
+        mFriendRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                curFriends = new ArrayList<>();
+                for (DataSnapshot firebaseUser: dataSnapshot.getChildren()){
+                    curFriends.add(firebaseUser.getKey());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("FRIEND_LIST", "Failed to read existing friends.", databaseError.toException());
+            }
+        });
+
         mRef = mDatabase.getReference("/Users");
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listFriend = new ArrayList<>();
+
                 for (DataSnapshot firebaseUser: dataSnapshot.getChildren()){
                     FriendItem value = firebaseUser.getValue(FriendItem.class);
                     if (userEmail.equals(value.getEmail())){
@@ -79,7 +96,13 @@ public class FriendsListTab extends Fragment {
                     mFriend.setUsername(value.getUsername());
                     mFriend.setEmail(value.getEmail());
                     mFriend.setID(firebaseUser.getKey());
+                    if (curFriends.contains(firebaseUser.getKey())){
+                        mFriend.setIsFriend(true);
+                    }
+                    else
+                        mFriend.setIsFriend(false);
                     listFriend.add(mFriend);
+
                     recyclerAdapter = new RecyclerViewAdapterUser(getContext(), listFriend);
                     myRecyclerview.setAdapter(recyclerAdapter);
                 }

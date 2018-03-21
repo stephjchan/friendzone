@@ -43,9 +43,23 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        int status = 0;
+
         holder.itemUsername.setText(mData.get(position).getUsername());
         holder.itemEmail.setText(mData.get(position).getEmail());
-        holder.addFunc(mData.get(position).getID());
+
+        if (mData.get(position).getIsFriend()){
+            holder.buttonAdd.setText("REMOVE");
+            holder.buttonAdd.setTag(1);
+            status = 1;
+        }
+        else{
+            holder.buttonAdd.setText("ADD");
+            holder.buttonAdd.setTag(0);
+            status = 0;
+        }
+
+        holder.addFunc(mData.get(position).getID(), status);
     }
 
 
@@ -70,33 +84,22 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
             mDataBase = FirebaseDatabase.getInstance().getReference();
 
             buttonAdd = itemView.findViewById(R.id.button_add);
-            buttonAdd.setTag(0); // initialize button as "Add"
         }
 
-        public void addFunc (final String uID){
+        public void addFunc (final String uID, final int status){
+
             buttonAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final int status = (Integer) v.getTag();
                     final FirebaseUser user = mAuth.getCurrentUser();
-                    Map<String, Integer> account1 = new HashMap<>();
-                    Map<String, Integer> account2 = new HashMap<>();
 
-
-                    //@ child of current userID in Friends branch
-//                    mRef = FirebaseDatabase.getInstance().getReference("/Friends/"+user.getUid());
-
-                    //account.put(user.getEmail(), 1);
-                    //CHANGE THIS!!!
                     switch (status) {
                         case 0:
                             //change to REMOVE if User clicks button
-//                            mDataBase.child("Joined").child("Email").child("event_"+String.valueOf(1)).setValue(account);
-
                             mDataBase.child("Friends").child(user.getUid()).child(uID).setValue(1);
                             mDataBase.child("Friends").child(uID).child(user.getUid()).setValue(1);
                             buttonAdd.setText("REMOVE");
-                            //buttonAdd.setBackgroundColor(Color.parseColor("#43a047"));
                             v.setTag(1);
                             break;
                         case 1:
@@ -104,7 +107,6 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
                             mDataBase.child("Friends").child(user.getUid()).child(uID).setValue(null);
                             mDataBase.child("Friends").child(uID).child(user.getUid()).setValue(null);
                             buttonAdd.setText("ADD");
-                            //buttonAdd.setBackgroundColor(Color.parseColor("#4d2c91"));
                             v.setTag(0);
                             break;
                     }
