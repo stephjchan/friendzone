@@ -34,6 +34,8 @@ import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,12 +57,14 @@ public class FeedTab extends Fragment {
 
     private DatabaseReference myRef;
     private Bitmap placeImg;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     protected GeoDataClient mGeoDataClient;
     protected PlaceDetectionClient mPlaceDetectionClient;
-
+    private FirebaseDatabase mDatabase;
     private HashMap<String, Integer> nearbyUsers = new HashMap<String,Integer>();
-
+    private HashMap<String, Integer> currentFriends = new HashMap<String, Integer>();
     private double searchRadius;
     @Nullable
     @Override
@@ -72,7 +76,7 @@ public class FeedTab extends Fragment {
         recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         myRecyclerView.setAdapter(recyclerAdapter);
-
+        mDatabase = FirebaseDatabase.getInstance();
         return rootView;
     }
 
@@ -88,8 +92,13 @@ public class FeedTab extends Fragment {
         // hard code the search radius to be .5 km
         searchRadius = .5;
 
-        myRef = FirebaseDatabase.getInstance().getReference("/Microreports");
-        DatabaseReference fireRef = FirebaseDatabase.getInstance().getReference("user-location-geofire");
+
+        myRef = mDatabase.getReference("/Microreports");
+        DatabaseReference fireRef = mDatabase.getReference("user-location-geofire");
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
         final GeoFire geo = new GeoFire(fireRef);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,7 +107,20 @@ public class FeedTab extends Fragment {
                 // location is updated.
                 // clear the list of nearby users
 
+                DatabaseReference mFriendRef = mDatabase.getReference("/Friends/"+user.getUid()); //get curUser friendsList
+                mFriendRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
+                    for (DataSnapshot firebaseUser: dataSnapshot.getChildren()){
+                        currentFriends.put(firebaseUser.getKey(), 1);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("FRIEND_LIST", "Failed to read existing friends.", databaseError.toException());
+                }
+            });
                 GeoQuery geoQuery = geo.queryAtLocation(new GeoLocation(MainActivity.latitude, MainActivity.longitude), searchRadius);
 
                 geoQuery.addGeoQueryEventListener(new GeoQueryEventListener(){
@@ -110,45 +132,48 @@ public class FeedTab extends Fragment {
                         listMReport = new ArrayList<>();
 
 
-                        System.out.println("Key: " + key.substring(1));
+                        //System.out.println("Key: " + key.substring(1));
                         nearbyUsers.put(key, 1);
 
                         for (DataSnapshot firebaseUser : dataSnapshot.getChildren()) {
-                            for (DataSnapshot microReport : firebaseUser.getChildren()) {
+                            if (currentFriends.get(firebaseUser.getKey() )!=null){
+                                for (DataSnapshot microReport : firebaseUser.getChildren()) {
 
-                                MicroReportItem value = microReport.getValue(MicroReportItem.class);
-                                // Jansen Yan: if these users are nearby within the search radius, add them to the feed
-                                System.out.println("Key from datasnap shot: " + microReport.getKey());
-                                if (nearbyUsers.get( microReport.getKey()) != null){
-                                    //System.out.println(value.getEventPhotoRetriever());
-                                    MicroReportItem mReport = new MicroReportItem();
-                                    // Jansen Yan: moved code
+                                    MicroReportItem value = microReport.getValue(MicroReportItem.class);
+                                    // Jansen Yan: if these users are nearby within the search radius, add them to the feed
+                                    System.out.println("Key from datasnap shot: " + microReport.getKey());
+                                    if (nearbyUsers.get( microReport.getKey()) != null){
+                                        //System.out.println(value.getEventPhotoRetriever());
+                                        MicroReportItem mReport = new MicroReportItem();
+                                        // Jansen Yan: moved code
 //                        getPhotos();
 //                        mReport.setLocationPhoto(placeImg);
-                        String photoRetriever = "";
+                                        String photoRetriever = "";
 //                        if (value.getEventPhotoRetriever() != null){
 //                            photoRetriever = value.getEventPhotoRetriever();
 //                            mReport.setEventPhotoRetriever(value.getEventPhotoRetriever());
 //                        }
 
-                                    mReport.setEventName(value.getEventName());
-                                    mReport.setEventLocationName(value.getEventLocationName());
-                                    mReport.setEventLocationAddress(value.getEventLocationAddress());
-                                    mReport.setEventUsername(value.getEventUsername());
-                                    mReport.setEventStartTime(value.getEventStartTime());
-                                    mReport.setID(microReport.getKey());
+                                        mReport.setEventName(value.getEventName());
+                                        mReport.setEventLocationName(value.getEventLocationName());
+                                        mReport.setEventLocationAddress(value.getEventLocationAddress());
+                                        mReport.setEventUsername(value.getEventUsername());
+                                        mReport.setEventStartTime(value.getEventStartTime());
+                                        mReport.setID(microReport.getKey());
 
-                                    // Jansen Yan: set bitmap for image
+                                        // Jansen Yan: set bitmap for image
 //                        getPhotos(photoRetriever);
 //                        mReport.setLocationPhoto(placeImg);
 
-                                    listMReport.add(mReport);
-                                    //TODO: sort microreports by event time
-                                    recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
-                                    myRecyclerView.setAdapter(recyclerAdapter);
-                                }
+                                        listMReport.add(mReport);
+                                        //TODO: sort microreports by event time
+                                        recyclerAdapter = new RecyclerViewAdapter(getContext(), listMReport);
+                                        myRecyclerView.setAdapter(recyclerAdapter);
+                                    }
 
+                                }
                             }
+
                         }
                     }
                     @Override
